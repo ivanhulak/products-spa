@@ -9,9 +9,8 @@ import {
   TablePagination
 } from '@mui/material';
 import { BasicModel } from './BasicModel';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { ContextApp } from './products-reducer';
 import { useNavigate } from 'react-router-dom';
 
 export type ProductType = {
@@ -28,12 +27,15 @@ const tableContainerSx: SxProps = {
   borderRadius: 4,
   maxHeight: 600
 };
-export const ProductsTable: React.FC<{ reseted: boolean }> = ({ reseted }) => {
+export const ProductsTable: React.FC<{ reseted: boolean, filter: number | null }> = ({ reseted, filter }) => {
   const [totalProducts, setTotalProducts] = useState(0);
   const [error, setError] = useState('');
   const [products, setProducts] = useState<ProductType[]>([])
   const [controller, setController] = useState({page: 1, rowsPerPage: 5})
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate()
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   useEffect(() => {
     const controller = JSON.parse(localStorage.getItem('controller') || "")
@@ -46,19 +48,11 @@ export const ProductsTable: React.FC<{ reseted: boolean }> = ({ reseted }) => {
     localStorage.setItem('controller', JSON.stringify(controller));
   }, [controller]);
 
-  const navigate = useNavigate()
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const { state }: any = useContext(ContextApp);
-  const filter = state.filter
-
-
   useEffect(() => {
     navigate(`/products?page=${controller.page}&per_page=${controller.rowsPerPage}`)
   }, [controller.page])
 
   useEffect(() => {
-    console.log('useEffect products')
     const loadProducts = () => {
       axios.get(`https://reqres.in/api/products?page=${controller.page}&per_page=${controller.rowsPerPage}`)
         .then(response => {
@@ -75,7 +69,6 @@ export const ProductsTable: React.FC<{ reseted: boolean }> = ({ reseted }) => {
 
   useEffect(() => {
     if (filter !== null) {
-      console.log('useEffect filter')
       axios.get(`https://reqres.in/api/products?id=${filter}`)
         .then(response => {
           setProducts([response.data.data])

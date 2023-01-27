@@ -1,20 +1,19 @@
 import { TextField, Button } from '@mui/material';
-import { useState, useEffect, useContext } from 'react';
-import { ContextApp } from './products-reducer';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export const FilterForm: React.FC<{onReset: () => void}> = ({onReset}) => {
-  const { state, dispatch }: any = useContext(ContextApp);
-  const [value, setValue] = useState<null | number>(state.filter)
+type FilterFormPropsType = {
+  onReset: () => void,
+  changeFilter: (value: null | number) => void,
+  filter: null | number
+}
+export const FilterForm: React.FC<FilterFormPropsType> = ({onReset, changeFilter, filter}) => {
+  const [value, setValue] = useState<null | number>(1)
   const navigate = useNavigate()
   
-  const changeFilter = (value: number | null) => {
-    dispatch({type: 'SET_FILTER', filter: value})
-  }
-  
   useEffect(() => {
-    navigate(`/products?id=${state.filter}`)
-  }, [state.filter])
+    navigate(`/products?id=${filter}`)
+  }, [filter])
 
   return (
     <div style={{ textAlign: 'center', marginBottom: '30px' }}>
