@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { BasicModel } from './BasicModel';
 import { useState, useEffect } from 'react';
+import { useStickyState } from './useStickyState';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -27,11 +28,11 @@ const tableContainerSx: SxProps = {
   borderRadius: 4,
   maxHeight: 600
 };
-export const ProductsTable: React.FC<{ reseted: boolean, filter: number | null }> = ({ reseted, filter }) => {
+export const ProductsTable: React.FC<{ reseted: boolean, filter: number | string }> = ({ reseted, filter }) => {
   const [totalProducts, setTotalProducts] = useState(0);
   const [error, setError] = useState('');
   const [products, setProducts] = useState<ProductType[]>([])
-  const [controller, setController] = useState({ page: 1, rowsPerPage: 5 })
+  const [controller, setController] = useStickyState({page: 1, rowsPerPage: 5}, 'controller')
   const [open, setOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState<ProductType | null>(null);
   const navigate = useNavigate()
@@ -45,13 +46,6 @@ export const ProductsTable: React.FC<{ reseted: boolean, filter: number | null }
   }
 
   useEffect(() => {
-    const controller = JSON.parse(localStorage.getItem('controller') || "")
-    if (controller) {
-      setController(controller)
-    }
-  }, []);
-
-  useEffect(() => {
     localStorage.setItem('controller', JSON.stringify(controller));
   }, [controller]);
 
@@ -60,6 +54,21 @@ export const ProductsTable: React.FC<{ reseted: boolean, filter: number | null }
   }, [controller.page])
 
   useEffect(() => {
+    console.log('request filter')
+    if (filter !== '') {
+      axios.get(`https://reqres.in/api/products?id=${filter}`)
+        .then(response => {
+          setProducts([response.data.data])
+          setTotalProducts(1)
+        })
+        .catch(e => {
+          alert(e.message)
+          setError(e.message)
+        })
+    }
+  }, [filter])
+  useEffect(() => {
+    console.log('request page')
     const loadProducts = () => {
       axios.get(`https://reqres.in/api/products?page=${controller.page}&per_page=${controller.rowsPerPage}`)
         .then(response => {
@@ -74,19 +83,6 @@ export const ProductsTable: React.FC<{ reseted: boolean, filter: number | null }
     loadProducts()
   }, [controller, reseted])
 
-  useEffect(() => {
-    if (filter !== null) {
-      axios.get(`https://reqres.in/api/products?id=${filter}`)
-        .then(response => {
-          setProducts([response.data.data])
-          setTotalProducts(1)
-        })
-        .catch(e => {
-          alert(e.message)
-          setError(e.message)
-        })
-    }
-  }, [filter])
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -136,7 +132,7 @@ export const ProductsTable: React.FC<{ reseted: boolean, filter: number | null }
           page={controller.page - 1}
           onPageChange={handleChangePage}
         />
-        <BasicModel open={open} handleClose={handleClose} product={currentProduct}/>
+        <BasicModel open={open} handleClose={handleClose} product={currentProduct} />
       </TableContainer>
     );
   }

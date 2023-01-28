@@ -7,29 +7,32 @@ import { useNavigate } from 'react-router-dom';
 const App = () => {
   const navigate = useNavigate()
   const [reseted, setReseted] = useState(false)
-  const [filter, setFilter] = useState<null | number>(() => {
+  const [filter, setFilter] = useState<string | number>(() => {
     const filter = localStorage.getItem('filter');
     if (filter) {
-      return JSON.parse(localStorage.getItem('filter') || "");
+      return JSON.parse(localStorage.getItem('filter') || '');
     } else {
-      return 1;
+      return '';
     }
   })
 
+
   useEffect(() => {
+    console.log('nav filter')
     localStorage.setItem('filter', JSON.stringify(filter));
   }, [filter]);
 
-  useEffect(() => {
-    navigate(`/products?id=${filter}`)
-  }, [filter])
+  // useEffect(() => {
+  //   navigate(`/products?id=${filter}`)
+  // }, [isFilterChanged])
 
 
   const onReset = () => {
     setReseted(prev => !prev)
   }
-  const changeFilter = (value: number | null) => {
+  const changeFilter = (value: number | string) => {
     setFilter(value)
+    navigate(`/products?id=${filter}`)
   }
 
   return (
