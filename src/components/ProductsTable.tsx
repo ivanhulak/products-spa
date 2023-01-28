@@ -12,7 +12,7 @@ import { BasicModel } from './BasicModel';
 import { useState, useEffect } from 'react';
 import { useStickyState } from './useStickyState';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 export type ProductType = {
   name: string,
@@ -54,7 +54,6 @@ export const ProductsTable: React.FC<{ reseted: boolean, filter: number | string
   }, [controller.page])
 
   useEffect(() => {
-    console.log('request filter')
     if (filter !== '') {
       axios.get(`https://reqres.in/api/products?id=${filter}`)
         .then(response => {
@@ -68,7 +67,6 @@ export const ProductsTable: React.FC<{ reseted: boolean, filter: number | string
     }
   }, [filter])
   useEffect(() => {
-    console.log('request page')
     const loadProducts = () => {
       axios.get(`https://reqres.in/api/products?page=${controller.page}&per_page=${controller.rowsPerPage}`)
         .then(response => {

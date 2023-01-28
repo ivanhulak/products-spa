@@ -11,9 +11,9 @@ export const FilterForm: React.FC<FilterFormPropsType> = ({ onReset, changeFilte
   const [value, setValue] = useState<number | string>(filter)
   const navigate = useNavigate()
 
-  useEffect(() => {
-    navigate(`/products?id=${filter}`)
-  }, [filter])
+  // useEffect(() => {
+  //   navigate(`/products?id=${filter}`)
+  // }, [filter])
 
   return (
     <div style={{ textAlign: 'center', marginBottom: '30px' }}>
@@ -44,7 +44,6 @@ export const FilterForm: React.FC<FilterFormPropsType> = ({ onReset, changeFilte
         sx={{ ml: '10px', width: '150px' }}
         onClick={() => {
           changeFilter('')
-          navigate('/products');
           setValue('')
           onReset()
         }}

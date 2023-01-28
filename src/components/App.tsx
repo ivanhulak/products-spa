@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { FilterForm } from './FilterForm';
 import { ProductsTable } from './ProductsTable';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const App = () => {
   const navigate = useNavigate()
@@ -16,23 +17,16 @@ const App = () => {
     }
   })
 
-
   useEffect(() => {
-    console.log('nav filter')
     localStorage.setItem('filter', JSON.stringify(filter));
   }, [filter]);
-
-  // useEffect(() => {
-  //   navigate(`/products?id=${filter}`)
-  // }, [isFilterChanged])
-
 
   const onReset = () => {
     setReseted(prev => !prev)
   }
   const changeFilter = (value: number | string) => {
     setFilter(value)
-    navigate(`/products?id=${filter}`)
+    navigate(`/products/${value}`);
   }
 
   return (
