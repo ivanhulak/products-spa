@@ -31,11 +31,18 @@ export const ProductsTable: React.FC<{ reseted: boolean, filter: number | null }
   const [totalProducts, setTotalProducts] = useState(0);
   const [error, setError] = useState('');
   const [products, setProducts] = useState<ProductType[]>([])
-  const [controller, setController] = useState({page: 1, rowsPerPage: 5})
+  const [controller, setController] = useState({ page: 1, rowsPerPage: 5 })
   const [open, setOpen] = useState(false);
+  const [currentProduct, setCurrentProduct] = useState<ProductType | null>(null);
   const navigate = useNavigate()
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpen = (product: ProductType | null) => {
+    setOpen(true)
+    setCurrentProduct(product)
+  }
+  const handleClose = () => {
+    setOpen(false)
+    setCurrentProduct(null)
+  }
 
   useEffect(() => {
     const controller = JSON.parse(localStorage.getItem('controller') || "")
@@ -109,18 +116,15 @@ export const ProductsTable: React.FC<{ reseted: boolean, filter: number | null }
           </TableHead>
           <TableBody>
             {products.map((product: ProductType) => (
-              <>
-                <TableRow
-                  key={product.id}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 }, background: `${product.color}` }}
-                  onClick={handleOpen}
-                >
-                  <TableCell component="th" scope="row">{product.name}</TableCell>
-                  <TableCell align="right">{product.id}</TableCell>
-                  <TableCell align="right">{product.year}</TableCell>
-                </TableRow>
-                <BasicModel open={open} handleClose={handleClose} product={product} />
-              </>
+              <TableRow
+                key={product.id}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 }, background: `${product.color}` }}
+                onClick={() => handleOpen(product)}
+              >
+                <TableCell component="th" scope="row">{product.name}</TableCell>
+                <TableCell align="right">{product.id}</TableCell>
+                <TableCell align="right">{product.year}</TableCell>
+              </TableRow>
             ))}
           </TableBody>
         </Table>
@@ -132,6 +136,7 @@ export const ProductsTable: React.FC<{ reseted: boolean, filter: number | null }
           page={controller.page - 1}
           onPageChange={handleChangePage}
         />
+        <BasicModel open={open} handleClose={handleClose} product={currentProduct}/>
       </TableContainer>
     );
   }

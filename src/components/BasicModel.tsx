@@ -1,6 +1,6 @@
 import {
    TableContainer,
-   SxProps, 
+   SxProps,
    Table,
    TableHead,
    TableRow,
@@ -35,42 +35,47 @@ const tableContainerSx: SxProps = {
 type BasicModelPropsType = {
    open: boolean,
    handleClose: () => void,
-   product: ProductType
+   product: ProductType | null
 }
 export const BasicModel: React.FC<BasicModelPropsType> = ({ open, handleClose, product }) => {
-   return (
-      <Modal
-         open={open}
-         onClose={handleClose}
-         aria-labelledby="modal-modal-title"
-      >
-         <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2" align='center' mb='10px'>
-               Product Info
-            </Typography>
-            <TableContainer component={Paper} sx={tableContainerSx}>
-               <Table sx={{ minWidth: 300 }} size="small" aria-label="a dense table">
-                  <TableHead>
-                     <TableRow sx={{ background: '#eee' }}>
-                        <TableCell>Product Name</TableCell>
-                        <TableCell align="left">Id</TableCell>
-                        <TableCell align="left">Year</TableCell>
-                        <TableCell align="left">color</TableCell>
-                        <TableCell align="left">Pantone Value</TableCell>
-                     </TableRow>
-                  </TableHead>
-                  <TableBody>
-                     <TableRow>
-                        <TableCell align="left">{product.name}</TableCell>
-                        <TableCell align="left">{product.id}</TableCell>
-                        <TableCell align="left">{product.year}</TableCell>
-                        <TableCell align="left">{product.color}</TableCell>
-                        <TableCell align="left">{product.pantone_value}</TableCell>
-                     </TableRow>
-                  </TableBody>
-               </Table>
-            </TableContainer>
-         </Box>
-      </Modal>
-   );
+   if (product === null) return <div>Product not chosen</div>
+   else {
+      return (
+         <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+         >
+            <Box sx={style}>
+               <Typography id="modal-modal-title" variant="h6" component="h2" align='center' mb='10px'>
+                  Product Info
+               </Typography>
+               <TableContainer component={Paper} sx={tableContainerSx}>
+                  <Table sx={{ minWidth: 300 }} size="small" aria-label="a dense table">
+                     <TableHead>
+                        <TableRow sx={{ background: '#eee' }}>
+                           <TableCell>Product Name</TableCell>
+                           <TableCell align="left">Id</TableCell>
+                           <TableCell align="left">Year</TableCell>
+                           <TableCell align="left">color</TableCell>
+                           <TableCell align="left">Pantone Value</TableCell>
+                        </TableRow>
+                     </TableHead>
+                     <TableBody>
+                        <TableRow>
+                           <TableCell align="left">{product.name}</TableCell>
+                           <TableCell align="left">{product.id}</TableCell>
+                           <TableCell align="left">{product.year}</TableCell>
+                           <TableCell align="left">{product.color}</TableCell>
+                           <TableCell align="left">{product.pantone_value}</TableCell>
+                        </TableRow>
+                     </TableBody>
+                  </Table>
+               </TableContainer>
+            </Box>
+         </Modal>
+      );
+   }
+
+
 }
