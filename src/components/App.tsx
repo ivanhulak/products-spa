@@ -12,7 +12,7 @@ const App = () => {
     if (filter) {
       return JSON.parse(localStorage.getItem('filter') || "");
     } else {
-      return null;
+      return 1;
     }
   })
 

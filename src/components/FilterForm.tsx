@@ -8,7 +8,7 @@ type FilterFormPropsType = {
   filter: null | number
 }
 export const FilterForm: React.FC<FilterFormPropsType> = ({onReset, changeFilter, filter}) => {
-  const [value, setValue] = useState<null | number>(1)
+  const [value, setValue] = useState<number | null>(filter)
   const navigate = useNavigate()
   
   useEffect(() => {
