@@ -38,7 +38,7 @@ type BasicModelPropsType = {
    product: ProductType | null
 }
 export const BasicModel: React.FC<BasicModelPropsType> = ({ open, handleClose, product }) => {
-   if (product === null) return <div>Product not chosen</div>
+   if (product === null) return <></>
    else {
       return (
          <Modal
